@@ -3,6 +3,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.time.LocalDateTime" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="pl.sdacademy.Priority" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -12,10 +13,10 @@
 <body>
 <h1>Todo list</h1>
 <%
-    List<Task> tasks = (List<Task>) session.getAttribute("tasks");
+    List<Task> tasks = (List<Task>) session.getAttribute("tasksList");
     if (tasks == null) {
         tasks = new ArrayList<>();
-        session.setAttribute("tasks", tasks);
+        session.setAttribute("tasksList", tasks);
     }
 
     String newTaskDescription = request.getParameter("description");
@@ -31,8 +32,9 @@
             task.setFinishDate(finishDate);
         }
 
-        String priority = request.getParameter("priority");
-        if (priority != null && !priority.isEmpty()) {
+        String priorityParam = request.getParameter("priority");
+        if (priorityParam != null && !priorityParam.isEmpty()) {
+            Priority priority = Priority.valueOf(priorityParam.toUpperCase());
             task.setPriority(priority);
         }
 
@@ -46,7 +48,11 @@
     <label for="finishDate">Finish date</label>
     <input type="datetime-local" id="finishDate" name="finishDate">
     <label for="priority">Priority</label>
-    <input type="text" id="priority" name="priority">
+    <select id="priority" name="priority">
+        <option value="HIGH">High</option>
+        <option value="NORMAL" selected>Normal</option>
+        <option value="LOW">Low</option>
+    </select>
     <input type="submit" value="Add">
 </form>
 
@@ -58,7 +64,7 @@
         <th>priority</th>
     </tr>
     </thead>
-    <c:forEach var="task" items="${tasks}">
+    <c:forEach var="task" items="${tasksList}">
         <tr>
             <td>${task.description}</td>
             <td>${task.finishDate}</td>

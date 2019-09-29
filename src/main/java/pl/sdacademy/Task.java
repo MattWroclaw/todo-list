@@ -9,5 +9,5 @@ public class Task {
 
     private String description;
     private LocalDateTime finishDate;
-    private String priority;
+    private Priority priority;
 }
