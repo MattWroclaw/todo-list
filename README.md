@@ -55,3 +55,10 @@ Dodaj możliwość edycji zadania do wykonania​
 Zadanie 10
 ---------
 Dodaj warstwę utrwalania w bazie danych (Hibernate/JPA)​
+
+Zadanie 11
+----------
+Dodaj do aplikacji funkcjonalność związaną z obsługą wielu użytkowników:
+- rejestracja nowego użytkownika w aplikacji
+- każdy z użytkowników powinien posiadać własną listę zadań
+- na stronach wymagających autoryzacji należy wyświetlić login lub imię i nazwisko zalogowanego użytkownika

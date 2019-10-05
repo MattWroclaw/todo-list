@@ -1,5 +1,6 @@
 package pl.sdacademy.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import pl.sdacademy.entity.Priority;
 import pl.sdacademy.entity.Task;
 
@@ -12,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @WebServlet("/tasks")
 public class TaskController extends HttpServlet {
 
@@ -21,6 +23,7 @@ public class TaskController extends HttpServlet {
         if (session.getAttribute("tasksList") == null) {
             List<Task> tasks = new ArrayList<>();
             session.setAttribute("tasksList", tasks);
+            log.info("Creating new session attribute with key 'taskList'");
         }
 
         String lang = request.getParameter("lang");
@@ -28,6 +31,8 @@ public class TaskController extends HttpServlet {
             Cookie cookie = new Cookie("lang", lang);
             response.addCookie(cookie);
             response.sendRedirect("tasks");
+
+            log.debug("Language cookie set with value {}", lang);
             return;
         }
         request.getRequestDispatcher("tasks.jsp").forward(request, response);
@@ -37,6 +42,8 @@ public class TaskController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String newTaskDescription = request.getParameter("description");
         if (newTaskDescription == null) {
+            response.sendRedirect("tasks");
+            log.info("POST without any data");
             return;
         }
 
@@ -51,6 +58,8 @@ public class TaskController extends HttpServlet {
             task.setFinishDate(finishDate);
         }
 
+        log.debug("Creating new task {} with finish date {}", newTaskDescription, date);
+
         String priorityParam = request.getParameter("priority");
         if (priorityParam != null && !priorityParam.isEmpty()) {
             Priority priority = Priority.valueOf(priorityParam.toUpperCase());
@@ -59,6 +68,10 @@ public class TaskController extends HttpServlet {
 
         HttpSession session = request.getSession();
         List<Task> tasks = (List<Task>) session.getAttribute("tasksList");
+        if (tasks == null) {
+            tasks = new ArrayList<>();
+            session.setAttribute("tasksList", tasks);
+        }
         tasks.add(task);
         response.sendRedirect("tasks");
     }

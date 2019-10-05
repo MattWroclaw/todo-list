@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <fmt:setLocale value="${empty cookie.lang ? pageContext.response.locale : cookie.lang.value}"/>
 <fmt:setBundle basename="message"/>
@@ -42,7 +43,7 @@
         <tr>
             <td>${task.description}</td>
             <td>${task.finishDate}</td>
-            <td>${task.priority}</td>
+            <td><fmt:message key="priority.${fn:toLowerCase(task.priority)}"/></td>
         </tr>
     </c:forEach>
 </table>
