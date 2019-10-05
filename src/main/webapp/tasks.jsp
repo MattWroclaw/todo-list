@@ -20,7 +20,7 @@
 
 <form method="post" action="tasks">
     <label for="description"><fmt:message key="todo.task"/></label>
-    <input type="text" id="description" name="description">
+    <input type="text" id="description" name="description" autocomplete="off">
     <label for="finishDate"><fmt:message key="todo.date.finish"/></label>
     <input type="datetime-local" id="finishDate" name="finishDate">
     <label for="priority"><fmt:message key="todo.priority"/></label>
@@ -39,7 +39,7 @@
         <th><fmt:message key="todo.priority"/></th>
     </tr>
     </thead>
-    <c:forEach var="task" items="${sessionScope.tasksList}">
+    <c:forEach var="task" items="${requestScope.taskList}">
         <tr>
             <td>${task.description}</td>
             <td>${task.finishDate}</td>

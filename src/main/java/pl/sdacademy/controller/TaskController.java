@@ -3,6 +3,7 @@ package pl.sdacademy.controller;
 import lombok.extern.slf4j.Slf4j;
 import pl.sdacademy.entity.Priority;
 import pl.sdacademy.entity.Task;
+import pl.sdacademy.repository.TaskRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,15 +18,15 @@ import java.util.List;
 @WebServlet("/tasks")
 public class TaskController extends HttpServlet {
 
+    private TaskRepository taskRepository;
+
+    @Override
+    public void init() throws ServletException {
+        taskRepository = new TaskRepository();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if (session.getAttribute("tasksList") == null) {
-            List<Task> tasks = new ArrayList<>();
-            session.setAttribute("tasksList", tasks);
-            log.info("Creating new session attribute with key 'taskList'");
-        }
-
         String lang = request.getParameter("lang");
         if (lang != null) {
             Cookie cookie = new Cookie("lang", lang);
@@ -35,6 +36,10 @@ public class TaskController extends HttpServlet {
             log.debug("Language cookie set with value {}", lang);
             return;
         }
+
+        List<Task> tasks = taskRepository.findAll();
+        request.setAttribute("taskList", tasks);
+
         request.getRequestDispatcher("tasks.jsp").forward(request, response);
     }
 
@@ -66,13 +71,7 @@ public class TaskController extends HttpServlet {
             task.setPriority(priority);
         }
 
-        HttpSession session = request.getSession();
-        List<Task> tasks = (List<Task>) session.getAttribute("tasksList");
-        if (tasks == null) {
-            tasks = new ArrayList<>();
-            session.setAttribute("tasksList", tasks);
-        }
-        tasks.add(task);
+        taskRepository.save(task);
         response.sendRedirect("tasks");
     }
 }
