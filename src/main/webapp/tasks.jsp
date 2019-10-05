@@ -16,7 +16,8 @@
     <a href="tasks?lang=de_DE"><fmt:message key="language.german" bundle="${languages}"/></a> |
     <a href="tasks?lang=pl_PL"><fmt:message key="language.polish" bundle="${languages}"/></a>
 </p>
-<h1><fmt:message key="todo.app.name"/></h1>
+<fmt:message key="todo.app.name" var="appTitle"/>
+<h1><strong>${fn:split(appTitle, ' ')[0]}</strong> ${fn:split(appTitle, ' ')[1]}</h1>
 
 <form method="post" action="tasks">
     <label for="description"><fmt:message key="todo.task"/></label>
